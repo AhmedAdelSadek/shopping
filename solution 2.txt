@@ -1,0 +1,198 @@
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { lastValueFrom, Subscription } from "rxjs";
+import { ICartLine } from "src/app/models/ICartLine";
+import { IProduct } from "src/app/models/iproduct";
+import { Product } from "src/app/models/Product";
+import { untilDestroyed } from "src/app/shared/until-destroyed";
+import { ProductsService } from "../products.service";
+
+@Component({
+  selector: "cartDetail",
+  templateUrl: "./cartDetail.component.html",
+  styleUrls: ["./cartDetail.component.css"],
+})
+export class CartDetailComponent implements OnInit, OnDestroy {
+  public updatedData: ICartLine[] = [];
+  public cartPrice: number = 0;
+  public itemCount: number = 0;
+  get productObj(): IProduct {
+    return this.productServ.onProductChange;
+  }
+
+  constructor (private productServ: ProductsService) { }
+
+  ngOnInit(): void {
+    this.getCartLines()
+      .then((data) => {
+        this.updatedData = data;
+        this.recalculate();
+        return this.updatedData;
+      })
+      .then((data) => {
+        if (!this.isObjectEmpty(this.productObj)) {
+          return this.sendPostOrPutAPI(data);
+        }
+
+        return;
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+      .finally(() => { console.log('finally'); });
+  }
+  /**
+   * Gets cart lines
+   * @returns
+   */
+  private async getCartLines(): Promise<ICartLine[]> {
+    const cartLines$ = this.productServ.getCartLines();
+    return await lastValueFrom(cartLines$);
+  }
+  /**
+   * Sends post or put api
+   * @returns
+   */
+  private sendPostOrPutAPI(data: ICartLine[]) {
+
+    if (data.length == 0) {
+      cartLineObj = {
+        product: this.productObj,
+        quantity: 1,
+      };
+      this.post(cartLineObj);
+      this.refreshDataAfterPost();
+      return;
+    }
+
+    const cartLineIndex = data.findIndex((x) => x.product.id === this.productObj?.id);
+    var cartLineObj: ICartLine;
+
+    switch (true) {
+      case cartLineIndex != -1:
+        const cartLineID = data[cartLineIndex].id;
+        cartLineObj = {
+          product: this.productObj,
+          quantity: (data[cartLineIndex].quantity += 1),
+        };
+        this.put(cartLineID, cartLineObj);
+        break;
+      default:
+        cartLineObj = {
+          product: this.productObj,
+          quantity: 1,
+        };
+        this.post(cartLineObj);
+    }
+  }
+  /**
+   * Updates quantity (put)
+   * @param product
+   * @param quantity
+   */
+  public updateQuantity(product: Product, quantity: number): Subscription {
+    const cartLineIndex = this.updatedData.findIndex(
+      (x) => x.product.id === product.id
+    );
+    const cartLineID = this.updatedData[cartLineIndex]?.id;
+    const cartLineObj = {
+      product: product,
+      quantity: (this.updatedData[cartLineIndex].quantity = Number(quantity)),
+    };
+
+    return this.put(cartLineID, cartLineObj);
+  }
+  /**
+   * Removes line (delete)
+   * @param productId
+   */
+  public removeLine(productId: number): Subscription {
+    const cartLineIndex = this.updatedData.findIndex(
+      (x) => x.product.id === productId
+    );
+    const cartLineID = this.updatedData[cartLineIndex]?.id;
+    return this.delete(cartLineID, cartLineIndex);
+  }
+  /**
+   * Puts cart detail
+   * @param cartLineID
+   * @param cartLineObj
+   * @returns
+   */
+  private put(
+    cartLineID: number | undefined,
+    cartLineObj: ICartLine
+  ): Subscription {
+    return this.productServ
+      .put(cartLineID, cartLineObj)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.recalculate();
+      });
+  }
+  /**
+   * Posts cart detail
+   * @returns
+   */
+  private post(cartLineObj: ICartLine): Subscription {
+    return this.productServ
+      .post(cartLineObj)
+      .pipe(untilDestroyed(this))
+      .subscribe((obj) => {
+        this.updatedData.push(obj);
+        this.recalculate();
+      });
+  }
+  /**
+   * Deletes cart detail component
+   * @param cartLineID
+   * @param cartLineIndex
+   * @returns delete
+   */
+  private delete(
+    cartLineID: number | undefined,
+    cartLineIndex: number
+  ): Subscription {
+    return this.productServ
+      .delete(cartLineID)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.updatedData.splice(cartLineIndex, 1);
+        this.recalculate();
+      });
+  }
+  /**
+   * Refreshs data after post
+   */
+  private refreshDataAfterPost() {
+    this.productServ
+      .getCartLines()
+      .pipe(untilDestroyed(this))
+      .subscribe((data) => {
+        this.updatedData = data;
+        this.recalculate();
+      });
+  }
+  /**
+   * check if the object is empty
+   * @param obj
+   * @returns
+   */
+  private isObjectEmpty(obj: IProduct): boolean {
+    return Object.keys(obj).length === 0;
+  }
+  /**
+   * Recalculates cart detail component
+   */
+  private recalculate(): void {
+    this.itemCount = 0;
+    this.cartPrice = 0;
+    this.updatedData.forEach((line) => {
+      this.itemCount += line.quantity;
+      this.cartPrice += line.quantity * line.product.price;
+    });
+  }
+
+  ngOnDestroy(): void {
+    console.log("Component Destroy");
+  }
+}

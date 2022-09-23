@@ -1,0 +1,173 @@
+<h2 class="bg-light mb-2">Add New Product</h2>
+
+<div id="main">
+  <!--photoUpload start-->
+  <div id="photoUpload">
+    <div class="group-gap" [style.content-visibility]="imageSrc == undefined ? 'hidden' : 'visible'">
+      <div class="avatar-upload">
+        <div class="avatar-edit">
+          <input type='file' id="imageUpload" accept="image/*" (change)="handleInputChange($event.target.files)"
+            onchange="console.log(event.target.files)" #fileUpload />
+        </div>
+        <div class="avatar-preview">
+          <div id="imagePreview" [style.backgroundImage]="'url('+ imageSrc +')'">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="file-upload" requiredFileType="image/*">
+      {{fileName || "No phote uploaded yet."}}
+      <button mat-mini-fab class="upload-btn" (click)="fileUpload.click()" matTooltip="Upload Image">
+        <mat-icon>cloud_upload </mat-icon>
+      </button>
+    </div>
+
+    <p>Upload Percent: {{percentDone}}% </p> <br />
+
+    <ng-container *ngIf="uploadSuccess" class="success">
+      <p class="sucess">Upload Successful</p>
+    </ng-container>
+  </div>
+  <!--photoUpload end-->
+
+  <!--IndexFelder start-->
+  <div id="IndexFelder">
+    <div>IndexFelder</div>
+    <form [formGroup]="inputsForm">
+      <div fxLayout="row wrap" fxFlex="100" id="formContainer">
+        <!--first Row start-->
+        <div fxLayout="row wrap" fxFlex="100">
+          <!--categoryId field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <mat-label>select Category Id</mat-label>
+              <mat-select formControlName="categoryId" placeholder="select category" disableOptionCentering
+                disableRipple>
+                <mat-option value="None"></mat-option>
+                <mat-option *ngFor="let catId of categoryIdsArray" [value]="catId"> {{catId}} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!--/categoryId field end-->
+          <!--isAvailable field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <input placeholder="Is available?" matInput formControlName="isAvailable">
+            </mat-form-field>
+          </div>
+          <!--/isAvailable field end-->
+          <!--category field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <mat-label>select Category</mat-label>
+              <mat-select formControlName="category" placeholder="select category" disableOptionCentering disableRipple>
+                <mat-option value="None"></mat-option>
+                <mat-option *ngFor="let cat of categoriesArray" [value]="cat"> {{cat}} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!--/category field end-->
+          <!--rating field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <mat-label>select rating</mat-label>
+              <mat-select formControlName="rating" placeholder="select Rating" disableOptionCentering disableRipple>
+                <mat-option value="None"></mat-option>
+                <mat-option *ngFor="let rate of ratingArray" [value]="rate"> {{rate}} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!--/rating field end-->
+        </div>
+        <!--/first Row end-->
+        <!------------------------------------------------------------------------------>
+        <!--second Row start-->
+        <div fxLayout="row wrap" fxFlex="100">
+          <!--inventoryStatus field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <mat-label>select inventory Status</mat-label>
+              <mat-select formControlName="inventoryStatus" placeholder="select inventory Status" disableOptionCentering
+                disableRipple>
+                <mat-option value="None"></mat-option>
+                <mat-option *ngFor="let inv of inventoryStatusArray" [value]="inv"> {{inv}} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!--/inventoryStatus field end-->
+          <!--productName field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <input placeholder="productName" matInput formControlName="productName">
+            </mat-form-field>
+            <div *ngIf="!f['productName'].valid && (f['productName'].dirty ||f['productName'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="f['productName'].errors.required">Product name is required.</div>
+
+              <div *ngIf="f['productName'].errors.cannotBeginWithSpace">
+                {{f['productName'].errors.message}}
+              </div>
+            </div>
+          </div>
+          <!--/productName field end-->
+          <!--price field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <input placeholder="price" matInput formControlName="price">
+            </mat-form-field>
+            <div *ngIf="!f['price'].valid && (f['price'].dirty ||f['price'].touched)" class="alert alert-danger">
+              <div *ngIf="f['price'].errors.required">Price is required.</div>
+              <div *ngIf="f['price'].errors.pattern">Enter only number.</div>
+              <div *ngIf="f['price'].errors.onlyNumber && !f['price'].errors.required">
+                {{f['price'].errors.message}}
+              </div>
+            </div>
+          </div>
+          <!--/price field end-->
+          <!--quantity field start-->
+          <div fxFlex="25" fxFlex.sm="48" fxFlex.xs="100">
+            <mat-form-field>
+              <input placeholder="quantity" matInput formControlName="quantity">
+            </mat-form-field>
+            <div *ngIf="!f['quantity'].valid && (f['quantity'].dirty ||f['quantity'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="f['quantity'].errors.required">Quantity is required.</div>
+              <div *ngIf="f['quantity'].errors.pattern">Enter only number.</div>
+              <div *ngIf="f['quantity'].errors.onlyNumber && !f['quantity'].errors.required">
+                {{f['quantity'].errors.message}}
+              </div>
+            </div>
+          </div>
+          <!--/quantity field end-->
+        </div>
+        <!--/second Row end-->
+        <!------------------------------------------------------------------------------>
+        <!--third Row start-->
+        <div fxLayout="row wrap" fxFlex="100">
+          <!--description field start-->
+          <div fxFlex="65" fxFlex.sm="100" fxFlex.xs="100">
+            <mat-form-field>
+              <textarea matInput formControlName="description" placeholder="Description..."></textarea>
+            </mat-form-field>
+            <div *ngIf="!description?.valid && (description?.dirty ||description?.touched)" class="alert alert-danger">
+              <div *ngIf="description.errors.required">Description is required.</div>
+              <div *ngIf="description.errors.minlength && !description.errors.cannotBeginWithSpace">at least 5 Char is
+                required.</div>
+              <div *ngIf="description.errors.cannotBeginWithSpace">
+                {{description.errors.message}}
+              </div>
+            </div>
+          </div>
+          <!--/description field end-->
+        </div>
+        <!--/third Row end-->
+      </div>
+    </form>
+  </div>
+  <!--IndexFelder end-->
+</div>
+
+<div class="form-group">
+  <button class="btn btn-primary" (click)="submitForm()" cdkFocusInitial [disabled]="!inputsForm.valid">Submit</button>
+</div>

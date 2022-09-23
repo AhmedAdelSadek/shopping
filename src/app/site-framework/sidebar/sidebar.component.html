@@ -1,0 +1,27 @@
+<!-- passing the {exact: true} to the [routerLinkActiveOptions]
+will make the RouterLinkactive to be applied only if the route URL matches exactly to the current URL 
+style="display: none;"-->
+
+
+<!--[fxFlex]="isHidden ? 50 : 25"
+  [style.display]="isHidden ? 'none': 'flex'"-->
+
+<div *ngIf="Data" class="menu">
+  <ul class="layout-menu">
+    <li>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="['active']" [routerLink]="['/products']">
+        View All Products
+      </a>
+    </li>
+    <li>
+      <a [routerLinkActive]="['active']" [routerLink]="['/products/create-product']">
+        Add New Product
+      </a>
+    </li>
+    <li *ngFor="let cat of Data">
+      <a [routerLinkActive]="['active']" [routerLink]="['/products/category/', cat.id]">
+        {{ cat.categoryName }}
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,70 @@
+<div id="login" class="inner-scroll" fxLayout="row" fxLayoutAlign="start">
+
+  <div id="login-intro" fxFlex fxHide fxShow.gt-xs>
+
+    <div class="logo">
+
+    </div>
+
+    <div class="title">
+      Business Project
+    </div>
+
+    <div class="description">
+
+    </div>
+
+
+  </div>
+
+  <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+
+
+    <div id="login-form" style="z-index: 2;">
+
+
+      <div class="title">LOGIN TO YOUR ACCOUNT</div>
+
+
+
+      <form name="loginForm" [formGroup]="loginForm" (ngSubmit)="login()">
+
+
+        <div class="loading" *ngIf="loggingIn" style="z-index: 1;  position: absolute;">
+          <mat-spinner></mat-spinner>
+        </div>
+
+
+        <mat-form-field appearance="outline">
+          <mat-label>Login</mat-label>
+          <input matInput formControlName="login">
+          <mat-icon matSuffix class="secondary-text">person</mat-icon>
+          <mat-error *ngIf="loginForm.get('login')?.hasError('required')">
+            Username is required
+          </mat-error>
+        </mat-form-field>
+
+
+
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'PW'}}</mat-label>
+          <input matInput type="password" formControlName="password">
+          <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+          <mat-error>
+            Password is required
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" class="submit-button" type="submit" [disabled]="loginForm.invalid">
+          <span *ngIf="!loginForm.disabled">
+            LOGIN
+          </span>
+          <mat-progress-spinner *ngIf="loginForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+          </mat-progress-spinner>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
