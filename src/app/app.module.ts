@@ -1,33 +1,56 @@
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
-import { AngularMaterialModule } from 'src/material.module';
-import { PrimengModule } from 'src/primeng.module';
-import { AppComponent } from './app.component';
-import { AuthenticationModule } from './authentication/authenticationModule/authentication.module';
-
+import { HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterModule, Routes } from "@angular/router";
+import { AngularMaterialModule } from "src/material.module";
+import { PrimengModule } from "src/primeng.module";
+import { AppComponent } from "./app.component";
+import { AppMainComponent } from "./AppMain/AppMain.component";
+import { AuthenticationModule } from "./authentication/authenticationModule/authentication.module";
+import { SiteFrameworkModule } from "./site-framework/site-framework.module";
 
 const routes: Routes = [
-  { path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule) },
-  { path: 'authentication', loadChildren: () => import('./authentication/authenticationModule/authentication.module').then(m => m.AuthenticationModule) },
+  {
+    path: "authentication",
+    loadChildren: () =>
+      import(
+        "./authentication/authenticationModule/authentication.module"
+      ).then((m) => m.AuthenticationModule),
+  },
+  {
+    path: "",
+    component: AppMainComponent,
+    children: [
+      {
+        path: "products",
+        loadChildren: () =>
+          import("./products/products.module").then((m) => m.ProductsModule),
+      },
+      {
+        path: "file-manager",
+        loadChildren: () =>
+          import("./file-manager/file-manager.module").then(
+            (m) => m.FileManagerModule
+          ),
+      },
+    ],
+  },
+
   // { path: 'frameWork', loadChildren: () => import('./site-framework/site-framework.module').then(m => m.SiteFrameworkModule) },
   // { path: 'login', component: LoginComponent },
   // { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent, AppMainComponent],
   imports: [
     HttpClientModule,
+
     FormsModule,
     ReactiveFormsModule,
-    
 
     BrowserModule,
     BrowserAnimationsModule,
@@ -37,16 +60,16 @@ const routes: Routes = [
     PrimengModule,
 
     AuthenticationModule,
+    SiteFrameworkModule,
 
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
   ],
   providers: [
     // HashLocationStrategy => http://localhost:4200/#/
     // we use  HashLocationStrategy, when the web server does not support pathLocationStrategy.
     // { provide: LocationStrategy, useClass: HashLocationStrategy }
-
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
 // pathlocationstrategy vs hashlocationstrategy

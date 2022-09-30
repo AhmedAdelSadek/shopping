@@ -1,0 +1,48 @@
+mat-drawer {
+  max-width: 359px;
+}
+
+@media only screen and (max-width: 599.2px) {
+  mat-drawer {
+    min-width: 100%;
+  }
+}
+
+._container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.icon-size-14 {
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  font-size: 3.5rem;
+  line-height: 3.5rem;
+  opacity: 0.5;
+  color: rgb(148, 163, 184);
+}
+
+.bg-amber {
+  background-color: rgb(217, 119, 6);
+}
+
+.bg-red {
+  background-color: rgb(220, 38, 38);
+}
+
+.bg-gray {
+  background-color: rgb(71, 85, 105);
+}
+
+.bg-blue {
+  background-color: rgb(37, 99, 235);
+}
+
+.bg-green {
+  background-color: rgb(22, 163, 74);
+}

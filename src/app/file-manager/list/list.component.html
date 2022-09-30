@@ -1,0 +1,329 @@
+<div style="
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0px;
+    height: 100%;
+  ">
+  <mat-drawer-container style="height: 100%; flex: 1 1 auto" (backdropClick)="onBackdropClicked()" autosize>
+    <!-- Drawer -->
+    <mat-drawer [mode]="drawerMode" [opened]="false" [position]="'end'" style="width: 100%" [disableClose]="true"
+      #matDrawer>
+      <router-outlet></router-outlet>
+    </mat-drawer>
+
+    <mat-drawer-content style="
+        background-color: rgb(241 245 249);
+        display: flex;
+        flex-direction: column;
+      ">
+      <!-- Main -->
+      <div class="_container">
+        <!-- Header -->
+        <div style="
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            align-items: baseline;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background-color: rgb(255, 255, 255);
+          ">
+          <!-- Title -->
+          <div>
+            <div style="font-size: 2rem">File Manager</div>
+            <div style="display: flex; font-weight: 500; color: #6c757d">
+              <ng-container *ngIf="!items?.path?.length">
+                {{ items.folders?.length }} folders,
+                {{ items.files?.length }} files
+              </ng-container>
+              <!-- Breadcrumbs -->
+              <ng-container *ngIf="items.path?.length">
+                <div style="display: flex">
+                  <a style="cursor: pointer; color: #2196f3" [routerLink]="['/file-manager']">
+                    Home
+                  </a>
+                  <div>/</div>
+                  <ng-container *ngFor="
+                      let path of items.path;
+                      let last = last;
+                      trackBy: trackByFn
+                    ">
+                    <ng-container *ngIf="!last">
+                      <a style="cursor: pointer; color: #2196f3" [routerLink]="['/file-manager/folders/', path.id]">
+                        {{ path.name }}
+                      </a>
+                    </ng-container>
+                    <ng-container *ngIf="last">
+                      <div>{{ path.name }}</div>
+                    </ng-container>
+                    <ng-container *ngIf="!last">
+                      <div>/</div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div id="AAAAAAAAAAAAAA" style="margin-top: 0rem">
+            <!-- Upload button -->
+            <button mat-flat-button [color]="'primary'" style="
+                background-color: #4f46e5;
+                border-radius: 9999px;
+                width: 140px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              ">
+              <mat-icon>add</mat-icon>
+              <span style="margin-left: 0.5rem; margin-right: 0.25rem">Upload file</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Items list -->
+        <ng-container *ngIf="
+            items && (items.folders?.length > 0 || items.files?.length > 0);
+            else noItems
+          ">
+          <div style="
+              padding: 2rem;
+              box-sizing: border-box;
+              border-width: 1px;
+              border-style: solid;
+              border-color: #e2e8f0;
+            ">
+            <!-- Folders -->
+            <ng-container *ngIf="items.folders?.length > 0">
+              <div style="
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: flex-start;
+                ">
+                <div style="font-weight: 500">Folders</div>
+
+                <div style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-top: 0.5rem;
+                    margin: -0.5rem;
+                  ">
+                  <ng-container *ngFor="let folder of items.folders; trackBy: trackByFn">
+                    <div style="
+                        box-shadow: #0000;
+                        padding: 1rem;
+                        border-radius: 1rem;
+                        width: 10rem;
+                        height: 10rem;
+                        margin: 0.5rem;
+                        position: relative;
+                        background-color: rgb(255, 255, 255);
+                      ">
+                      <a (click)="$event.preventDefault()" style="
+                          height: 2rem;
+                          width: 2rem;
+                          min-height: 2rem;
+                          z-index: 20;
+                          right: 0.375rem;
+                          top: 0.375rem;
+                          position: absolute;
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          max-height: 40px;
+                          line-height: 1;
+                          font-size: 0.875rem;
+                          font-weight: 500;
+                        " [routerLink]="['./details/', folder.id]" mat-icon-button>
+                        <mat-icon style="
+                            width: 1.25rem;
+                            height: 1.25rem;
+                            min-width: 1.25rem;
+                            min-height: 1.25rem;
+                            font-size: 1.25rem;
+                            line-height: 1.25rem;
+                            color: rgb(100, 116, 139);
+                          ">
+                          info
+                        </mat-icon>
+                      </a>
+                      <a style="
+                          padding: 1rem;
+                          display: flex;
+                          flex-direction: column;
+                          cursor: pointer;
+                          z-index: 10;
+                          top: 0px;
+                          right: 0px;
+                          bottom: 0px;
+                          left: 0px;
+                          position: absolute;
+                          text-decoration: none;
+                        " [routerLink]="['/file-manager/folders/', folder.id]">
+                        <div style="aspect-ratio: 9/6">
+                          <div style="
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              height: 100%;
+                            ">
+                            <mat-icon class="icon-size-14">folder</mat-icon>
+                          </div>
+                        </div>
+                        <div style="
+                            font-weight: 500;
+                            font-size: 0.75rem;
+                            text-align: center;
+                            display: flex;
+                            flex: 1 1 auto;
+                            flex-direction: column;
+                            justify-content: center;
+                          ">
+                          <div style="
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              white-space: nowrap;
+                              color: black;
+                            " [matTooltip]="folder.name" id="MMMMMMMMMMM">
+                            {{ folder.name }}
+                          </div>
+                          <ng-container *ngIf="folder.contents">
+                            <div style="
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                                color: black;
+                                color: #6c757d;
+                              ">
+                              {{ folder.contents }}
+                            </div>
+                          </ng-container>
+                        </div>
+                      </a>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Files -->
+            <ng-container *ngIf="items.files?.length > 0">
+              <div style="margin-top: 32px">
+                <div style="font-weight: 500">Files</div>
+
+                <div style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-top: 0.5rem;
+                    margin: -0.5rem;
+                  " id="DDDDDDDDDDDDDDD">
+                  <ng-container *ngFor="let file of items.files; trackBy: trackByFn">
+                    <a style="
+                        padding: 1rem;
+                        border-radius: 1rem;
+                        flex-direction: column;
+                        cursor: pointer;
+                        width: 10rem;
+                        height: 10rem;
+                        display: flex;
+                        margin: 0.5rem;
+                        text-decoration: none;
+                        background-color: rgb(255, 255, 255);
+                      " [routerLink]="['./details/', file.id]">
+                      <div style="aspect-ratio: 9/6">
+                        <div style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100%;
+                          ">
+                          <!-- Icons -->
+                          <div style="position: relative">
+                            <mat-icon class="icon-size-14">folder</mat-icon>
+                            <div style="
+                                color: rgb(255 255 255);
+                                line-height: 1.25rem;
+                                font-weight: 600;
+                                font-size: 0.75rem;
+                                padding-left: 0.375rem;
+                                padding-right: 0.375rem;
+                                border-radius: 0.25rem;
+                                bottom: 0px;
+                                left: 0px;
+                                position: absolute;
+                              " [class.bg-red]="file.type === 'PDF'" [class.bg-blue]="file.type === 'DOC'"
+                              [class.bg-green]="file.type === 'XLS'" [class.bg-gray]="file.type === 'TXT'"
+                              [class.bg-amber]="file.type === 'JPG'">
+                              {{ file.type.toUpperCase() }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style="
+                          font-weight: 500;
+                          font-size: 0.75rem;
+                          text-align: center;
+                          display: flex;
+                          justify-content: center;
+                          flex-direction: column;
+                          flex: 1 1 auto;
+                        ">
+                        <div style="
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            color: black;
+                          " [matTooltip]="file.name">
+                          {{ file.name }}
+                        </div>
+
+                        <ng-container *ngIf="file.contents">
+                          <div id="ZZZZZZZZZZ" style="
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              white-space: nowrap;
+                              color: black;
+                              color: #6c757d;
+                            ">
+                            {{ file.contents }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </a>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <!-- No items template -->
+        <ng-template #noItems>
+          <div style="
+              display: flex;
+              flex: 1 1 auto;
+              flex-direction: column;
+              align-items: center;
+              background-color: #f5f5f5;
+              justify-content: center;
+            ">
+            <div style="
+                margin-top: 1.5rem;
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #6c757d;
+              ">
+              There are no items!
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

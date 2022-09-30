@@ -1,0 +1,158 @@
+<div style="display: flex; flex-direction: column; flex: 1 1 auto; padding: 2rem">
+    <!-- Close button -->
+    <div style="display: flex; justify-content: flex-end">
+        <button mat-icon-button [routerLink]="['../../']">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Preview -->
+    <div style="margin-top: 2rem">
+        <div style="
+        border-width: 1px;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 125px;
+        background-color: #fafafa;
+        border: 1px solid #dee2e6;">
+            <ng-container *ngIf="item.type === 'folder'">
+                <mat-icon style="
+            min-width: 6rem;
+            min-height: 6rem;
+            font-size: 6rem;
+            line-height: 6rem;
+            color: #91a0d5;">
+                    folder_open
+                </mat-icon>
+            </ng-container>
+            <ng-container *ngIf="item.type !== 'folder'">
+                <mat-icon style="
+            min-width: 6rem;
+            min-height: 6rem;
+            font-size: 6rem;
+            line-height: 6rem;
+            color: #91a0d5;">
+                    file_present
+                </mat-icon>
+            </ng-container>
+        </div>
+    </div>
+
+    <!-- Name & Type -->
+    <div style="display: flex; flex-direction: column; margin-top: 2rem">
+        <div style="font-size: 1.25rem; font-weight: 500">{{ item.name }}</div>
+        <div style="
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #ffffff;
+        border-radius: 0.25rem;
+        padding-left: 0.375rem;
+        padding-right: 0.375rem;
+        width: max-content;" [class.bg-indigo]="item.type === 'folder'" [class.bg-red]="item.type === 'PDF'"
+            [class.bg-blue]="item.type === 'DOC'" [class.bg-green]="item.type === 'XLS'"
+            [class.bg-gray]="item.type === 'TXT'" [class.bg-amber]="item.type === 'JPG'">
+            {{ item.type?.toUpperCase() }}
+        </div>
+    </div>
+
+    <!-- Information -->
+    <div style="margin-top: 2rem; font-weight: 500; font-size: 1.125rem">
+        Information
+    </div>
+    <div style="display: flex; flex-direction: column; margin-top: 1.5rem">
+        <div style="
+        display: flex;
+        justify-content: space-between;
+        padding-top: 1rem;
+        padding-bottom: 1rem;">
+            <div style="color: #6c757d">Created By</div>
+            <div>{{ item.createdBy }}</div>
+        </div>
+        <div style="
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        border-top-width: thin;
+        border-top-style: solid;
+        border-top-color: #c9c9c9;">
+            <div style="color: #6c757d">Created At</div>
+            <div>{{ item.createdAt }}</div>
+        </div>
+        <div style="
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        border-top-width: thin;
+        border-top-style: solid;
+        border-top-color: #c9c9c9;">
+            <div style="color: #6c757d">Modified At</div>
+            <div>{{ item.modifiedAt }}</div>
+        </div>
+        <div style="
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        border-top-width: thin;
+        border-top-style: solid;
+        border-top-color: #c9c9c9;">
+            <div style="color: #6c757d">Size</div>
+            <div>{{ item.size }}</div>
+        </div>
+        <ng-container *ngIf="item.contents">
+            <div style="
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            padding-bottom: 1rem;">
+                <div style="color: #6c757d">Contents</div>
+                <div>{{ item.contents }}</div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Description -->
+    <div style="
+        margin-top: 2rem;
+        width: 100%;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;">
+        <div style="font-weight: 500; font-size: 1.125rem">Description</div>
+        <button mat-icon-button>
+            <mat-icon style="color: #6c757d; font-size: 18px">edit</mat-icon>
+        </button>
+    </div>
+    <div style="display: flex; margin-top: 0.5rem">
+        <div style="padding-top: 1rem; padding-bottom: 1rem">
+            <ng-container *ngIf="item.description">
+                <div>{{ item.description }}</div>
+            </ng-container>
+            <ng-container *ngIf="!item.description">
+                <div style="color: #6c757d; font-style: italic">
+                    Click here to add a description
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="margin-top: 2rem; display: flex; justify-content: space-between">
+        <button mat-flat-button [color]="'primary'" style="
+        background-color: #4f46e5;
+        border-radius: 9999px;
+        width: 130px;
+        height: 40px;">
+            Download
+        </button>
+
+        <button mat-stroked-button style="border-radius: 9999px; width: 130px; height: 40px">
+            Delete
+        </button>
+    </div>
+</div>

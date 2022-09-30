@@ -6,7 +6,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { AngularMaterialModule } from "src/material.module";
 import { PrimengModule } from "src/primeng.module";
 import { SiteFrameworkModule } from "../site-framework/site-framework.module";
-import { AppMainComponent } from "./AppMain/AppMain.component";
+
 import { CartDetailComponent } from "./cartDetail/cartDetail.component";
 
 import { CreateProductComponent } from "./create-product/create-product.component";
@@ -20,26 +20,18 @@ import { ViewAllProductsComponent } from "./view-all-products/view-all-products.
 import { ViewProductComponent } from "./view-product/view-product.component";
 
 const routes: Routes = [
-  {
-    path: '', component: AppMainComponent,
-    children: [
-      { path: "", component: ViewAllProductsComponent },
-      { path: "create-product", component: CreateProductComponent },
-      { path: "category/:id", component: ViewAllProductsByCategoryComponent },
-      { path: "search", component: ViewAllProductsByDateComponent },
-      { path: "delete-product/:id", component: DeleteProductComponent },
-      { path: "product/:id", component: ViewProductComponent },
-      { path: "update-product/:id", component: UpdateProductComponent },
-      {path: "cart", component: CartDetailComponent,}
-     // { path: '', redirectTo: '', pathMatch: 'full' }
-    ]
-  }
-
+  { path: "", component: ViewAllProductsComponent },
+  { path: "create-product", component: CreateProductComponent },
+  { path: "category/:id", component: ViewAllProductsByCategoryComponent },
+  { path: "search", component: ViewAllProductsByDateComponent },
+  { path: "delete-product/:id", component: DeleteProductComponent },
+  { path: "product/:id", component: ViewProductComponent },
+  { path: "update-product/:id", component: UpdateProductComponent },
+  { path: "cart", component: CartDetailComponent },
 ];
 
 @NgModule({
   declarations: [
-    AppMainComponent,
     ProductsComponent,
     CreateProductComponent,
     ViewProductComponent,
@@ -48,7 +40,7 @@ const routes: Routes = [
     DeleteProductComponent,
     ViewAllProductsByDateComponent,
     ViewAllProductsByCategoryComponent,
-    CartDetailComponent
+    CartDetailComponent,
   ],
   imports: [
     AngularMaterialModule,
@@ -60,6 +52,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
   ],
-  providers: [ProductsService]
+  providers: [ProductsService],
 })
-export class ProductsModule { }
+export class ProductsModule {}
