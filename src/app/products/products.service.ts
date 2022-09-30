@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { ICartLine } from "../models/ICartLine";
-import { IProduct } from "../models/iproduct";
+import { IProduct } from "../models/IProduct";
 import { Category } from "../site-framework/category";
 // https://github.com/typicode/json-server
 // https://www.youtube.com/watch?v=KZTu40cW4M0&list=PLp50dWW_m40WQ9-t0lyamekhE2OiZQrCG&index=3

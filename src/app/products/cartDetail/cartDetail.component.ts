@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { lastValueFrom, Observable, Subscription, switchMap } from "rxjs";
 import { finalize, tap } from "rxjs/operators";
 import { ICartLine } from "src/app/models/ICartLine";
-import { IProduct } from "src/app/models/iproduct";
+import { IProduct } from "src/app/models/IProduct";
 import { Product } from "src/app/models/Product";
 import { untilDestroyed } from "src/app/shared/until-destroyed";
 import { ProductsService } from "../products.service";

@@ -7,7 +7,7 @@ import { Product } from "src/app/models/Product";
 import { cannotBeginWithSpace } from "src/app/shared/cbws.validator";
 import { onlyNumber } from "src/app/shared/gte.validator";
 import { untilDestroyed } from "src/app/shared/until-destroyed";
-import { IProduct } from "../../models/iproduct";
+import { IProduct } from "../../models/IProduct";
 import { ProductsService } from "../products.service";
 
 export type keys = "inventoryStatus" | "rating" | "category" | "categoryId";

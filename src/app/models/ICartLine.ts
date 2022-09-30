@@ -1,19 +1,7 @@
-
-import { IProduct } from "./iproduct";
+import { IProduct } from "./IProduct";
 
 export interface ICartLine {
-    id?: number,
-    quantity: number,
-    product: IProduct;
+  id?: number;
+  quantity: number;
+  product: IProduct;
 }
-
-
-// export class CaerLine{
-//     id?: number;
-//     quantity: number;
-//     product: IProduct;
-
-//     constructor(){
-
-//     }
-// }

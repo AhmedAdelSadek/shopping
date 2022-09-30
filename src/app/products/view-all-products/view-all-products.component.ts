@@ -9,7 +9,7 @@ import { Router } from "@angular/router";
 import { PrimeNGConfig, SelectItem } from "primeng/api";
 import { Product } from "src/app/models/Product";
 import { SiteFrameworkService } from "src/app/site-framework/site-framework.service";
-import { IProduct } from "../../models/iproduct";
+import { IProduct } from "../../models/IProduct";
 import { CartDetailComponent } from "../cartDetail/cartDetail.component";
 import { ProductsService } from "../products.service";
 

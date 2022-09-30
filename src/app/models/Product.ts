@@ -1,4 +1,4 @@
-import { IProduct } from "./iproduct";
+import { IProduct } from "./IProduct";
 
 export class Product implements IProduct {
     id: number;

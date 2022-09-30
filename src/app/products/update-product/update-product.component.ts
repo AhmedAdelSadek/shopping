@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../products.service';
-import { IProduct } from '../../models/iproduct';
+import { IProduct } from '../../models/IProduct';
 
 @Component({
   selector: 'app-update-product',
