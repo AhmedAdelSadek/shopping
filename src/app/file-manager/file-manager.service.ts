@@ -1,53 +1,39 @@
-import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import {
-    BehaviorSubject,
-    map,
-    Observable,
-    of,
-    switchMap,
-    take,
-    tap,
-    throwError,
-} from "rxjs";
-import { Item, Items } from "./file-manager.types";
+import { Injectable } from "@angular/core";
 import { cloneDeep } from "lodash-es";
+import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from "rxjs";
+import { BaseService } from "../shared/baseService.service";
+import { Item, Items } from "./file-manager.types";
 
-@Injectable({
-    providedIn: "root",
-})
-export class FileManagerService {
-    // Private
+@Injectable({ providedIn: "root" })
+export class FileManagerService extends BaseService {
     private _item: BehaviorSubject<any> = new BehaviorSubject(null);
     private _items: BehaviorSubject<any> = new BehaviorSubject(null);
 
-    /**
-     * Constructor
-     */
-    constructor (private _httpClient: HttpClient) { }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Getter for items
-     */
     get items$(): Observable<Items> {
         return this._items.asObservable();
     }
 
-    /**
-     * Getter for item
-     */
     get item$(): Observable<Item> {
         return this._item.asObservable();
     }
 
-    /**
-     * Get items
-     */
 
+    /**
+     * Creates an instance of file manager service.
+     * @param http 
+     */
+    constructor (http: HttpClient) {
+        super(http);
+        this.get("http://localhost:3000/items").subscribe(console.log);
+    }
+
+    /**
+     * Registers handlers
+     * @param itemList 
+     * @param folderISerialID 
+     * @returns handlers 
+     */
     registerHandlers(itemList: Item[], folderISerialID: string): Items {
         let items = cloneDeep(itemList);
         const folderId = folderISerialID ?? null;
@@ -71,25 +57,25 @@ export class FileManagerService {
         }
 
         while (currentFolder?.folderId) {
-            currentFolder = pathItems.find(
-                (item: Item) => item.id === currentFolder?.folderId
-            );
+            currentFolder = pathItems.find((item: Item) => item.id === currentFolder?.folderId);
             if (currentFolder) {
                 path.unshift(currentFolder);
             }
         }
 
         return {
-            folders,
-            files,
-            path,
+            folders, files, path,
         };
     }
 
+    /**
+     * Gets items
+     * @param [folderId] 
+     * @returns items 
+     */
     getItems(folderId: any = null): Observable<Item[]> {
-        console.log(folderId);
-        const productUrl = "http://localhost:3000/items";
-        return this._httpClient.get<Item[]>(productUrl).pipe(
+        const itemsUrl = "http://localhost:3000/items";
+        return this.get<Item[]>(itemsUrl).pipe(
             tap((response) => {
                 console.log(response);
                 let res = this.registerHandlers(response, folderId);
@@ -100,18 +86,16 @@ export class FileManagerService {
     }
 
     /**
-     * Get item by id
+     * Gets item by id
+     * @param id 
+     * @returns item by id 
      */
     getItemById(id: string): Observable<Item> {
-        // const productUrl = "http://localhost:3000/items/" + id;
         return this._items.pipe(
             take(1),
             map((items) => {
                 // Find within the folders and files
-                const item =
-                    [...items?.folders, ...items?.files].find(
-                        (value) => value.id === id
-                    ) || null;
+                const item = [...items?.folders, ...items?.files].find((value) => value.id === id) || null;
 
                 // Update the item
                 this._item.next(item);
@@ -121,8 +105,9 @@ export class FileManagerService {
             }),
             switchMap((item) => {
                 if (!item) {
+                    const message: string = "Could not found the item with id of " + id + "!";
                     return throwError(
-                        () => "Could not found the item with id of " + id + "!"
+                        () => message
                     );
                 }
 
